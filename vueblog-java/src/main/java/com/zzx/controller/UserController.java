@@ -29,15 +29,5 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequiresAuthentication
-    @GetMapping("/index")
-    public Result index() {
-        User user = userService.getById(1L);
-        return Result.success(user);
-    }
 
-    @PostMapping("/save")
-    public Result save(@Validated @RequestBody User user) {
-        return Result.success(user);
-    }
 }

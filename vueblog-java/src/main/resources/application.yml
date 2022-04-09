@@ -5,8 +5,18 @@ spring:
     url: jdbc:mysql://localhost:3306/vueblog?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-mybatis-plus:
-  mapper-locations: classpath*:/mapper/**Mapper.xml
+#mybatis-plus:
+#  mapper-locations: classpath*:/mapper/**Mapper.xml
+
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml  #项目中使用注解进行开发
+
+pagehelper:
+  helper-dialect: mysql # 指定数据库类型
+  reasonable: true
+  params: count=countSql
+  support-methods-arguments: true
 
 server:
   port: 8081

@@ -1,8 +1,5 @@
 package com.zzx.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -10,7 +7,8 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
 
 /**
  * <p>
@@ -23,16 +21,18 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("m_user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @NotBlank(message = "昵称不能为空")
     private String username;
+
+    private String password;
+
+    private String nickname;
 
     private String avatar;
 
@@ -40,13 +40,13 @@ public class User implements Serializable {
     @Email(message = "邮箱格式不正确")
     private String email;
 
-    private String password;
-
     private Integer status;
 
-    private LocalDateTime created;
+    private Timestamp createTime;
 
-    private LocalDateTime lastLogin;
+    private Timestamp updateTime;
+
+    private String role;
 
 
 }

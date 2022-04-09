@@ -2,7 +2,6 @@ package com.zzx.controller;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zzx.common.dto.LoginDto;
 import com.zzx.common.lang.Result;
 import com.zzx.entity.User;
@@ -41,7 +40,8 @@ public class AccountController {
     @PostMapping("/login")
     public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
 
-        User user = userService.getOne(new QueryWrapper<User>().eq("username", loginDto.getUsername()));
+
+        User user = userService.getUserByName(loginDto.getUsername());
         Assert.notNull(user, "用户不存在");
 
         if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))) {

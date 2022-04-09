@@ -2,4 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zzx.mapper.BlogMapper">
 
+    <!--定义resultMap-->
+    <resultMap id="BlogResultMap" type="com.zzx.common.vo.BlogInfo">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="firstPicture" column="first_picture"/>
+        <result property="description" column="description"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="views" column="views"/>
+        <result property="words" column="words"/>
+        <result property="typeId" column="type_id"/>
+        <result property="typeName" column="type_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="username"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <sql id="blogSql">
+        SELECT b.*,
+               t.id,
+               t.type_name,
+               u.id,
+               u.username
+        FROM blog AS b
+                 LEFT JOIN type AS t ON b.type_id = t.id
+                 LEFT JOIN user AS u ON b.user_id = u.id
+        WHERE 1 = 1
+    </sql>
+
+
+    <select id="getBlogs" resultMap="BlogResultMap">
+        <include refid="blogSql"></include>
+        AND b.STATUS = 1
+        ORDER BY b.create_time DESC
+    </select>
+
+    <select id="getBlogById" resultMap="BlogResultMap">
+        <include refid="blogSql"></include>
+        AND b.STATUS = 1
+        AND b.id = #{id}
+        ORDER BY b.create_time DESC
+    </select>
 </mapper>

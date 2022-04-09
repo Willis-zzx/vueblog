@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzx.mapper.TypeMapper">
+
+    <resultMap id="Type" type="com.zzx.entity.Type">
+        <id property="id" column="id"/>
+        <result property="typeName" column="type_name"/>
+    </resultMap>
+    <select id="getTypeList" resultMap="Type">
+        select *
+        from type
+        where 1 = 1
+    </select>
+</mapper>

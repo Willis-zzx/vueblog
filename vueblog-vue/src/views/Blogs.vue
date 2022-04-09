@@ -4,7 +4,6 @@
 
     <div class="block">
       <el-timeline>
-
         <el-timeline-item :timestamp="blog.created" placement="top" v-for="blog in blogs">
           <el-card>
             <h4>

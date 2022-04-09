@@ -3,47 +3,81 @@ import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import BlogDetail from '../views/BlogDetail.vue'
 import BlogEdit from '../views/BlogEdit.vue'
+import Home from "../views/Home";
+import Blog from "../views/Blog.vue"
 
 Vue.use(VueRouter)
 
 const routes = [
     {
-        path: '/',
-        name: 'Index',
-        redirect: {name: 'Blogs'}
-    },
-    {
         path: '/login',
         name: 'Login',
-        component: Login
-    },
+        component: Login,
+        meta: {
+            title: '登录'
+        }
+    }, 
     {
-        path: '/blogs',
-        name: 'Blogs',
+        path: '/',
+        name: 'Index',
+
         // 懒加载
-        component: () => import('../views/Blogs.vue')
+        component: () => import('../views/Index.vue'),
+        redirect: 'Home',
+        children: [{
+                path: '',
+                name: 'Home',
+                component: Home,
+                meta: {
+                    title: '首页'
+                }
+            },
+            {
+                path: '/blog/:blogId',
+                name: 'Blog',
+                component: Blog,
+                meta: {
+                    title: '博客'
+                }
+            },
+            /*{
+                path: '/archives',
+                name: 'Archives',
+                component: Archives,
+                meta: {
+                    title: '归档'
+                }
+            },
+            {
+                path: '/about',
+                name: 'About',
+                component: About,
+                meta: {
+                    title: '关于我'
+                }
+            },
+            {
+                path: '/friends',
+                name: 'Friends',
+                component: Friends,
+                meat: {
+                    title: '友链'
+                }
+            },
+            {
+                path: '/category/:name',
+                name: 'Category',
+                component: Category,
+                meta: {
+                    title: '分类'
+                }
+            }, */
+
+
+        ]
+
     },
-    {
-        path: '/blog/add', // 注意放在 path: '/blog/:blogId'之前
-        name: 'BlogAdd',
-        meta: {
-            requireAuth: true
-        },
-        component: BlogEdit
-    },
-    {
-        path: '/blog/:blogId',
-        name: 'BlogDetail',
-        component: BlogDetail
-    },
-    {
-        path: '/blog/:blogId/edit',
-        name: 'BlogEdit',
-        meta: {
-            requireAuth: true
-        },
-        component: BlogEdit
-    }
+
 ]
 
 const router = new VueRouter({
