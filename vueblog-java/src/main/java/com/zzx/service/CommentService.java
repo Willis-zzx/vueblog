@@ -3,7 +3,6 @@ package com.zzx.service;
 import com.zzx.common.vo.PageComment;
 import com.zzx.entity.Comment;
 
-
 import java.util.List;
 
 /**
@@ -16,20 +15,43 @@ import java.util.List;
  */
 public interface CommentService {
     /**
-     * 通过博客id和父评论id查找所有子评论 并按照时间倒序排序
+     * 通过查询条件查询评论列表
      *
-     * @param blogId
-     * @param parentCommentId
-     * @return
+     * @param comment 查询条件
+     * @return 评论列表
      */
-    List<PageComment> getPageCommentListByDesc(Long blogId, Long parentCommentId);
+    List<PageComment> getPageCommentList(Comment comment);
 
     /**
-     * 通过博客id和父评论id查找所有子评论
+     * 通过查询条件查询评论详情
      *
-     * @param blogId
-     * @param parentCommentId
+     * @param comment 查询条件
+     * @return 评论详情
+     */
+    PageComment getPageComment(Comment comment);
+
+    /**
+     * 通过查询条件查询评论详情
+     *
+     * @param comment 查询条件
+     * @return 评论详情
+     */
+    Comment getComment(Comment comment);
+
+    /**
+     * 修改评论
+     *
+     * @param comment
+     */
+    void updateComment(Comment comment);
+
+    /**
+     * 删除评论
+     *
+     * @param id
      * @return
      */
-    List<PageComment> getPageCommentList(Long blogId, Long parentCommentId);
+    int deleteCommentById(Long id);
+
+    void createComment(Comment comment);
 }

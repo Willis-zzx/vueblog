@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzx.mapper.FriendMapper">
+
+    <resultMap id="friend" type="com.zzx.entity.Friend">
+        <id property="id" column="id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="description" column="description"/>
+        <result property="website" column="website"/>
+        <result property="avatar" column="avatar"/>
+        <result property="isPublished" column="is_published"/>
+        <result property="views" column="views"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    <sql id="friendSql">
+        select *
+        from friend f
+    </sql>
+    <delete id="deleteFriendById">
+        delete
+        from friend
+        where id = #{id}
+    </delete>
+
+
+    <select id="getFriendList" resultMap="friend" parameterType="com.zzx.entity.Friend">
+        <include refid="friendSql"/>
+        <where>
+            <if test="isPublishedValue != null and isPublishedValue != ''">
+                f.is_published = #{isPublished}
+            </if>
+        </where>
+        <if test="sort != null and sort != ''">
+            order by f.create_time ${sort}
+        </if>
+    </select>
+    <select id="getFriend" resultMap="friend" parameterType="com.zzx.entity.Friend">
+        <include refid="friendSql"/>
+        <where>
+            <if test="isPublishedValue != null and isPublishedValue != ''">
+                f.is_published = #{isPublishedValue}
+            </if>
+        </where>
+    </select>
+    <update id="updateFriend">
+        update friend
+        <set>
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="website != null and website != ''">website = #{website},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="isPublished != null and isPublished != ''">is_published = #{isPublished,jdbcType=BIT},</if>
+            <if test="views != null and views != ''">views = #{views},</if>
+            <if test="createTime != null and createTime != ''">create_time = #{createTime}</if>
+        </set>
+        where id #{id}
+    </update>
+    <insert id="createFriend">
+        insert into friend(nickname, description, website, avatar, is_published, create_time, views)
+        values (#{nickname,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR},
+                #{avatar,jdbcType=VARCHAR}, #{isPublished,jdbcType=BIT}, #{createTime,jdbcType=DATE})
+    </insert>
+</mapper>

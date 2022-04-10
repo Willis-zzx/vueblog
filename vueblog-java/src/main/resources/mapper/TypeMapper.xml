@@ -6,9 +6,52 @@
         <id property="id" column="id"/>
         <result property="typeName" column="type_name"/>
     </resultMap>
-    <select id="getTypeList" resultMap="Type">
+
+    <sql id="typeSql">
         select *
-        from type
-        where 1 = 1
+        from type t
+    </sql>
+
+    <select id="getType" resultMap="Type" parameterType="com.zzx.entity.Type">
+        <include refid="typeSql"/>
+        <where>
+            <if test="id != null and id !=''">
+                t.id = #{id}
+            </if>
+            <if test="typeName != null and typeName != ''">
+                t.type_name like concat('%',#{typeName},'%')
+            </if>
+        </where>
     </select>
+
+    <select id="getTypeList" resultMap="Type" parameterType="com.zzx.entity.Type">
+        <include refid="typeSql"/>
+        <where>
+            <if test="id != null and id !=''">
+                t.id = #{id}
+            </if>
+            <if test="typeName != null and typeName != ''">
+                t.type_name like concat('%',#{typeName},'%')
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteTypeById">
+        delete
+        from type
+        where id = #{id}
+    </delete>
+
+    <update id="updateType">
+        update type
+        <set>
+            <if test="typeName != null and typeName != ''">type_name = #{typeName}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="createType">
+        insert into type (type_name)
+        values (#{typeName})
+    </insert>
 </mapper>

@@ -1,6 +1,6 @@
 package com.zzx.service.impl;
 
-import com.zzx.common.vo.BlogInfo;
+import com.zzx.common.vo.PageBlog;
 import com.zzx.entity.Blog;
 import com.zzx.mapper.BlogMapper;
 import com.zzx.service.BlogService;
@@ -24,23 +24,26 @@ public class BlogServiceImpl implements BlogService {
     private BlogMapper blogMapper;
 
     /**
-     * 获取博客列表
+     * 根据查询条件获取博客列表
      *
+     * @param blog 查询条件实体类
      * @return 博客列表
      */
     @Override
-    public List<BlogInfo> getBlogs() {
-        return blogMapper.getBlogs();
+    public List<PageBlog> getBlogList(Blog blog) {
+        return blogMapper.getBlogList(blog);
     }
 
     /**
-     * 通过博客id获取博客明细
+     * 通过查询条件获取博客明细
      *
-     * @param id id
-     * @return blog实体类
+     * @param blog 查询条件实体类
+     * @return 博客详情
      */
     @Override
-    public BlogInfo getBlogById(Integer id) {
-        return blogMapper.getBlogById(id);
+    public PageBlog getBlog(Blog blog) {
+        return blogMapper.getBlog(blog);
     }
+
+
 }

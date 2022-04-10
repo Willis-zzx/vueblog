@@ -1,7 +1,7 @@
 package com.zzx.mapper;
 
 
-import com.zzx.common.vo.BlogInfo;
+import com.zzx.common.vo.PageBlog;
 import com.zzx.entity.Blog;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,17 +19,21 @@ import java.util.List;
 public interface BlogMapper {
 
     /**
-     * 获取博客列表
+     * 根据查询条件获取博客列表
      *
+     * @param blog 查询条件实体类
      * @return 博客列表
      */
-    List<BlogInfo> getBlogs();
+    List<PageBlog> getBlogList(Blog blog);
+
 
     /**
-     * 通过博客id获取博客明细
+     * 通过查询条件获取博客明细
      *
-     * @param id id
-     * @return blog实体类
+     * @param blog 查询条件实体类
+     * @return 博客详情
      */
-    BlogInfo getBlogById(Integer id);
+    PageBlog getBlog(Blog blog);
+
+
 }

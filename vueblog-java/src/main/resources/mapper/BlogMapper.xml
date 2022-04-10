@@ -3,7 +3,7 @@
 <mapper namespace="com.zzx.mapper.BlogMapper">
 
     <!--定义resultMap-->
-    <resultMap id="BlogResultMap" type="com.zzx.common.vo.BlogInfo">
+    <resultMap id="BlogResultMap" type="com.zzx.common.vo.PageBlog">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="firstPicture" column="first_picture"/>
@@ -29,20 +29,95 @@
         FROM blog AS b
                  LEFT JOIN type AS t ON b.type_id = t.id
                  LEFT JOIN user AS u ON b.user_id = u.id
-        WHERE 1 = 1
     </sql>
 
+    <select id="getBlogList" parameterType="com.zzx.entity.Blog" resultMap="BlogResultMap">
+        <include refid="blogSql"/>
 
-    <select id="getBlogs" resultMap="BlogResultMap">
-        <include refid="blogSql"></include>
-        AND b.STATUS = 1
-        ORDER BY b.create_time DESC
+        <where>
+            <if test="id != null and id != ''">
+                b.id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and b.title like concat('%',#{title},'%')
+            </if>
+            <if test="firstPicture != null and firstPicture != ''">
+                and b.firstPicture like concat('%',#{firstPicture},'%')
+            </if>
+            <if test="description != null and description != ''">
+                and b.description like concat('%',#{description},'%')
+            </if>
+            <if test="content != null and content != ''">
+                and b.content like concat('%',#{content},'%')
+            </if>
+            <if test="createTime != null and createTime !=''">
+                and b.createTime like concat('%',#{createTime},'%')
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and b.updateTime like concat('%',#{updateTime},'%')
+            </if>
+
+            <if test="views != null and views != ''">
+                and b.views = #{views}
+            </if>
+            <if test="words != null and words != ''">
+                and b.words = #{words}
+            </if>
+            <if test="typeId != null and typeId != ''">
+                and b.type_id = #{typeId}
+            </if>
+            <if test="userId != null and userId !=''">
+                and b.user_id = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                and b.status = #{status}
+            </if>
+        </where>
     </select>
 
-    <select id="getBlogById" resultMap="BlogResultMap">
-        <include refid="blogSql"></include>
-        AND b.STATUS = 1
-        AND b.id = #{id}
-        ORDER BY b.create_time DESC
+    <select id="getBlog" parameterType="com.zzx.entity.Blog" resultMap="BlogResultMap">
+        <include refid="blogSql"/>
+
+        <where>
+            <if test="id != null and id != ''">
+                b.id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and b.title like concat('%',#{title},'%')
+            </if>
+            <if test="firstPicture != null and firstPicture != ''">
+                and b.firstPicture like concat('%',#{firstPicture},'%')
+            </if>
+            <if test="description != null and description != ''">
+                and b.description like concat('%',#{description},'%')
+            </if>
+            <if test="content != null and content != ''">
+                and b.content like concat('%',#{content},'%')
+            </if>
+            <if test="createTime != null and createTime !=''">
+                and b.createTime like concat('%',#{createTime},'%')
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and b.updateTime like concat('%',#{updateTime},'%')
+            </if>
+
+            <if test="views != null and views != ''">
+                and b.views = #{views}
+            </if>
+            <if test="words != null and words != ''">
+                and b.words = #{words}
+            </if>
+            <if test="typeId != null and typeId != ''">
+                and b.type_id = #{typeId}
+            </if>
+            <if test="userId != null and userId !=''">
+                and b.user_id = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                and b.status = #{status}
+            </if>
+        </where>
     </select>
+
+
 </mapper>

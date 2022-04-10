@@ -1,5 +1,6 @@
 package com.zzx.mapper;
 
+
 import com.zzx.common.vo.PageComment;
 import com.zzx.entity.Comment;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,24 +23,43 @@ import java.util.List;
 public interface CommentMapper {
 
     /**
-     * 根据创建时间倒序 根据博客id和父评论id查询所有子评论
+     * 通过查询条件查询评论列表
      *
-     * @param blogId
-     * @param parentCommentId
-     * @return
+     * @param comment 查询条件
+     * @return 评论列表
      */
-    @Select("select id, nickname, content, website,avatar, create_time, is_admin_comment,parent_comment_nickname  from comment where blog_id=#{blogId} and parent_comment_id=#{parentCommentId} order by create_time desc")
-    List<PageComment> getPageCommentListByPageAndParentCommentIdByDesc(@Param("blogId") long blogId, @Param("parentCommentId") long parentCommentId);
+    List<PageComment> getPageCommentList(Comment comment);
 
     /**
-     * 根据博客id和父评论id查询所有子评论
+     * 通过查询条件查询评论详情
      *
-     * @param blogId
-     * @param parentCommentId
+     * @param comment 查询条件
+     * @return 评论详情
+     */
+    PageComment getPageComment(Comment comment);
+
+    /**
+     * 通过查询条件查询评论详情
+     *
+     * @param comment 查询条件
+     * @return 评论详情
+     */
+    Comment getComment(Comment comment);
+
+    /**
+     * 修改评论
+     *
+     * @param comment
+     */
+    void updateComment(Comment comment);
+
+    /**
+     * 删除评论
+     *
+     * @param id
      * @return
      */
-    @Select("select id, nickname, content, website,avatar, create_time, is_admin_comment,parent_comment_nickname  from comment where blog_id=#{blogId} and parent_comment_id=#{parentCommentId} order by create_time")
-    List<PageComment> getPageCommentListByPageAndParentCommentId(@Param("blogId") long blogId, @Param("parentCommentId") long parentCommentId);
+    int deleteCommentById(Long id);
 
-
+    void createComment(Comment comment);
 }

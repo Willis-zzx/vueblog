@@ -6,8 +6,10 @@
           'm-mobile-show': mobileHide,
           active: $route.name === 'About',
         }"
+        class="ui header item m-blue"
+        style="display: inline; padding: 20px 20px 20px 60px"
       >
-        myBlog
+        Skymo's Blog
       </h3>
     </router-link>
 
@@ -128,11 +130,11 @@ export default {
         1000
       );
     },
-
     getIsPhone() {
-      return navigator.userAgent.match(
+      let flag = navigator.userAgent.match(
         /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
       );
+      return flag;
     },
 
     querySearchAsync(queryString, callback) {
@@ -157,6 +159,7 @@ export default {
           if (_this.queryResult.length === 0) {
             _this.queryResult.push({ title: "无相关搜索结果" });
           }
+
           console.log(_this.queryResult);
           callback(_this.queryResult);
         })
@@ -181,15 +184,13 @@ export default {
       });
     },
   },
-
-  method() {
+  mounted() {
     if (this.getIsPhone()) {
       this.mobileHide = true;
     }
   },
 };
 </script>
-
 
 <style scoped>
 /deep/ .el-popper .popper__arrow::after {
@@ -230,6 +231,7 @@ export default {
   height: 50px;
   padding-top: 20px;
   background-color: #333333;
+
   margin-left: auto !important;
   margin-right: auto !important;
 }
@@ -280,11 +282,9 @@ export default {
   padding: 0px 1px 0px 1px;
   margin: 20px 1px 0px 1px;
 }
-
 /deep/ .el-autocomplete {
   position: absolute;
   right: 100px;
 }
 </style>
-
 

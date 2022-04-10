@@ -1,22 +1,116 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import BlogDetail from '../views/BlogDetail.vue'
-import BlogEdit from '../views/BlogEdit.vue'
+import Login from "../admin/Login";
 import Home from "../views/Home";
 import Blog from "../views/Blog.vue"
+import Category from "../views/Category.vue"
+import Archives from "../views/Archives.vue"
+import Friends from "../views/Friends.vue"
+import About from "../views/About.vue"
+import Admin from "../admin/Admin.vue"
+import BlogEdit from "../admin/BlogEdit.vue"
+import BlogList from "../admin/BlogList.vue"
+import CategoryList from "../admin/CategoryList.vue"
+import CommentList from "../admin/CommentList";
+import FriendList from "../admin/FriendList";
 
 Vue.use(VueRouter)
 
-const routes = [
-    {
+const routes = [{
         path: '/login',
         name: 'Login',
         component: Login,
         meta: {
             title: '登录'
         }
-    }, 
+    },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: Admin,
+        meta: {
+            title: '后台管理',
+            requireAuth: true
+        },
+        children: [{
+                path: '/writeBlog', // 注意放在 path: '/blog/:blogId'之前
+                name: 'BlogWrite',
+                component: BlogEdit,
+                meta: {
+                    requireAuth: true,
+                    title: '写博客'
+                }
+            },
+            {
+                path: '/blogList', // 注意放在 path: '/blog/:blogId'之前
+                name: 'blogList',
+                component: BlogList,
+                meta: {
+                    requireAuth: true,
+                    title: '文章管理'
+                }
+            },
+            {
+                path: '/blog/edit/:blogId',
+                name: 'BlogEdit',
+                meta: {
+                    requireAuth: true,
+                    title: '编辑博客'
+                },
+                component: BlogEdit
+            },
+            {
+                path: '/type',
+                component: CategoryList,
+                meta: {
+                    requireAuth: true,
+                    title: '分类管理'
+                }
+            },
+            {
+                path: '/comments',
+                component: CommentList,
+                meta: {
+                    requireAuth: true,
+                    title: '评论管理'
+                }
+            },
+            {
+                path: '/friendList',
+                component: FriendList,
+                meta: {
+                    requireAuth: true,
+                    title: '友链管理'
+                }
+            },
+            /*    {
+                    path: '/userManager',
+                    component: UserManager,
+                    meta: {
+                        requireAuth: true,
+                        title: '用户管理'
+                    }
+                },
+                {
+                    path: '/visitLog',
+                    component: VisitLog,
+                    meta: {
+                        requireAuth: true,
+                        title: '访问日志'
+                    }
+                },
+                {
+                    path: '/visitor',
+                    component: VisitorList,
+                    meta: {
+                        requireAuth: true,
+                        title: '访客统计'
+                    }
+                }, */
+
+        ]
+
+    },
     {
         path: '/',
         name: 'Index',
@@ -40,7 +134,7 @@ const routes = [
                     title: '博客'
                 }
             },
-            /*{
+            {
                 path: '/archives',
                 name: 'Archives',
                 component: Archives,
@@ -71,7 +165,7 @@ const routes = [
                 meta: {
                     title: '分类'
                 }
-            }, */
+            },
 
 
         ]

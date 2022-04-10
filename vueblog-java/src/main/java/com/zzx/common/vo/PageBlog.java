@@ -1,8 +1,6 @@
 package com.zzx.common.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.zzx.entity.Type;
-import com.zzx.entity.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,8 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-
-public class BlogInfo implements Serializable {
+public class PageBlog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

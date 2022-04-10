@@ -8,6 +8,7 @@ import com.zzx.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,30 +21,68 @@ import java.util.List;
  */
 @Service
 public class CommentServiceImpl implements CommentService {
-    @Autowired
+    @Resource
     CommentMapper commentMapper;
 
     /**
-     * 通过博客id和父评论id查找所有子评论 并按照时间倒序排序
+     * 通过查询条件查询评论列表
      *
-     * @param blogId
-     * @param parentCommentId
-     * @return
+     * @param comment 查询条件
+     * @return 评论列表
      */
     @Override
-    public List<PageComment> getPageCommentListByDesc(Long blogId, Long parentCommentId) {
-        return commentMapper.getPageCommentListByPageAndParentCommentIdByDesc(blogId, parentCommentId);
+    public List<PageComment> getPageCommentList(Comment comment) {
+        return commentMapper.getPageCommentList(comment);
     }
 
     /**
-     * 通过博客id和父评论id查找所有子评论
+     * 通过查询条件查询评论详情
      *
-     * @param blogId
-     * @param parentCommentId
+     * @param comment 查询条件
+     * @return 评论详情
+     */
+    @Override
+    public PageComment getPageComment(Comment comment) {
+        return commentMapper.getPageComment(comment);
+    }
+
+    /**
+     * 通过查询条件查询评论详情
+     *
+     * @param comment 查询条件
+     * @return 评论详情
+     */
+    @Override
+    public Comment getComment(Comment comment) {
+        return commentMapper.getComment(comment);
+    }
+
+    /**
+     * 修改评论
+     *
+     * @param comment
+     */
+    @Override
+    public void updateComment(Comment comment) {
+        commentMapper.updateComment(comment);
+    }
+
+    /**
+     * 删除评论
+     *
+     * @param id
      * @return
      */
     @Override
-    public List<PageComment> getPageCommentList(Long blogId, Long parentCommentId) {
-        return commentMapper.getPageCommentListByPageAndParentCommentId(blogId, parentCommentId);
+    public int deleteCommentById(Long id) {
+        return commentMapper.deleteCommentById(id);
     }
+
+    @Override
+    public void createComment(Comment comment) {
+        commentMapper.createComment(comment);
+
+    }
+
+
 }

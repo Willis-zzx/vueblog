@@ -89,5 +89,9 @@ public class Comment implements Serializable {
      */
     private String qq;
 
+    /**
+     * 排序
+     */
+    private String sort;
 
 }
