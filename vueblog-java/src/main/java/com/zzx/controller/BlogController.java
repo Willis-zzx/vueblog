@@ -18,6 +18,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,9 +54,9 @@ public class BlogController {
      */
     @GetMapping("/blogs")
     public Result getBlogs(@RequestParam(defaultValue = "1") Integer pageNum) {
-        PageHelper.startPage(pageNum, 5);
+        PageHelper.startPage(pageNum, 10);
         List<PageBlog> blogList = blogService.getBlogList(new Blog().setStatus(1));
-        PageInfo pageInfo = new PageInfo<>(blogList);
+        PageInfo<PageBlog> pageInfo = new PageInfo<>(blogList);
         return Result.success(pageInfo);
     }
 

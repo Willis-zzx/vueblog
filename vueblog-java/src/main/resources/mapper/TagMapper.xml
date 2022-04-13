@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzx.mapper.TagMapper">
+    <resultMap id="tagResultMap" type="com.zzx.entity.Tag">
+        <id property="id" column="id"/>
+        <result property="tagName" column="tag_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <sql id="tagSql">
+        select id, tag_name, create_time, update_time
+        from tag t
+    </sql>
+    <select id="getTag" resultMap="tagResultMap" parameterType="com.zzx.entity.Tag">
+        <include refid="tagSql"/>
+        <where>
+            <if test="id != null and id != ''">t.id = #{id}</if>
+            <if test="tagName != null and tagName != ''">t.tag_name like concat('%',#{tagName},'%')</if>
+        </where>
+    </select>
+    <select id="getTagList" resultMap="tagResultMap" parameterType="com.zzx.entity.Tag">
+        <include refid="tagSql"/>
+        <where>
+            <if test="id != null and id != ''">t.id = #{id}</if>
+            <if test="tagName != null and tagName != ''">t.tag_name like concat('%',#{tagName},'%')</if>
+        </where>
+    </select>
+    <insert id="insertTag">
+        insert into tag (tag_name)
+        values (#{tagName})
+    </insert>
+    <update id="updateTag">
+        update tag
+        set tag_name = #{tagName}
+        where id = #{id}
+    </update>
+    <delete id="deleteTag">
+        delete
+        from tag
+        where id = #{id}
+    </delete>
+</mapper>

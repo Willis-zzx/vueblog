@@ -1,98 +1,140 @@
 <template>
-  <el-container class="admin-container">
-    <!--头部-->
-    <el-header>
-      <!--标题-->
-      <div>
-        <img alt="" height="60" src="../assets/logo.png" />
-        <span> 博客后台管理 </span>
-        <span style="margin-left: 20px"> {{ user.username }}</span>
-        <el-divider direction="vertical"></el-divider>
-        <span><el-link href="/" style="color: white">主页</el-link></span>
-        <Header></Header>
-      </div>
-      <!-- 头像 -->
-      <el-dropdown v-if="user" class="user" trigger="click" @command="logout">
-        <div class="el-dropdown-link">
-          <el-avatar
-            :size="45"
-            :src="user.avatar"
-            fit="contain"
-            shape="circle"
-          ></el-avatar>
+  <el-container
+    class="container"
+    v-loading="false"
+    element-loading-text="拼命加载中"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+    element-loading-spinner="el-icon-loading"
+  >
+    <!-- 侧边栏 -->
+    <div>
+      <!-- 系统 Logo -->
+      <el-aside class="header-logo" :width="isCollapse ? '64px' : '190px'">
+        <div @click="$router.push({ name: 'Home' })">
+          <a v-if="!isCollapse">Blog Admin</a>
+          <a v-else>CMS</a>
         </div>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item icon="ali-iconfont icon-logout"
-            >退出</el-dropdown-item
-          >
-        </el-dropdown-menu>
-      </el-dropdown>
-    </el-header>
-
-    <!--页面主体-->
-    <el-container>
-      <!--侧边栏-->
-      <el-aside :width="isCollapse ? '64px' : '190px'">
-        <div class="toggle-button" @click="isCollapse = !isCollapse">
-          <i :class="isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"></i>
-        </div>
-        <!--菜单-->
-        <el-menu
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          :default-active="$store.state.activePath"
-          :default-openeds="defaultOpeneds"
-          :router="true"
-          :unique-opened="false"
-          active-text-color="#409eff"
-          background-color="honeydew"
-          text-color="black"
-        >
-          <!--          <el-menu-item index="/dashboard">-->
-          <!--            <i class="iconfont ali-iconfont icon-dashboard"></i>-->
-          <!--            <span>仪表盘</span>-->
-          <!--          </el-menu-item>-->
-          <!-- 一级菜单 -->
-          <el-submenu
-            v-for="item in menuList"
-            :key="item.id"
-            :index="item.id + ''"
-          >
-            <!-- 一级菜单的模板区域 -->
-            <template slot="title">
-              <i :class="iconsObj[item.id]" class="iconfont"></i>
-              <span>{{ item.title }}</span>
-            </template>
-            <!-- 二级菜单 -->
-            <el-menu-item
-              v-for="subItem in item.children"
-              :key="subItem.id"
-              :index="subItem.path"
-            >
-              <template slot="title">
-                <i :class="iconsObj[subItem.id]"></i>
-                <span>{{ subItem.title }}</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
       </el-aside>
-      <!--右侧内容主体-->
-      <el-main
-        :class="isCollapse ? 'm-el-main-width-64' : 'm-el-main-width-190'"
+      <el-aside
+        class="aside"
+        :width="isCollapse ? '64px' : '190px'"
+        :class="'icon-size-' + iconSize"
       >
+        <el-scrollbar style="height: 100%; width: 100%">
+          <!--
+            default-active 表示当前选中的菜单，默认为 home。
+            collapse 表示是否折叠菜单，仅 mode 为 vertical（默认）可用。
+            collapseTransition 表示是否开启折叠动画，默认为 true。
+            background-color 表示背景颜色。
+            text-color 表示字体颜色。
+        -->
+          <!--菜单-->
+          <el-menu
+            :collapse="isCollapse"
+            :collapse-transition="false"
+            :default-active="$store.state.activePath"
+            :default-openeds="defaultOpeneds"
+            :router="true"
+            :unique-opened="false"
+            active-text-color="#409eff"
+            background-color="#263238"
+            text-color="#8a979e"
+          >
+            <!--          <el-menu-item index="/dashboard">
+              <i class="iconfont ali-iconfont icon-dashboard"></i>
+              <span>仪表盘</span>
+            </el-menu-item> -->
+            <!-- 一级菜单 -->
+            <el-submenu
+              v-for="item in menuList"
+              :key="item.id"
+              :index="item.id + ''"
+            >
+              <!-- 一级菜单的模板区域 -->
+              <template slot="title">
+                <i :class="iconsObj[item.id]" class="iconfont"></i>
+                <span>{{ item.title }}</span>
+              </template>
+              <!-- 二级菜单 -->
+              <el-menu-item
+                v-for="subItem in item.children"
+                :key="subItem.id"
+                :index="subItem.path"
+              >
+                <template slot="title">
+                  <i :class="iconsObj[subItem.id]"></i>
+                  <span>{{ subItem.title }}</span>
+                </template>
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </el-scrollbar>
+      </el-aside>
+    </div>
+    <!--
+        direction="vertical"  用于垂直布局
+    -->
+    <el-container direction="vertical">
+      <!-- 头部导航栏 -->
+      <el-header height="50" style="background: #fff">
+        <div class="header">
+          <!-- 是否展开侧边栏 -->
+          <div class="header-title" @click="foldOrOpen">
+            <a class="el-icon-s-fold" v-if="!isCollapse" title="折叠侧边栏" />
+            <a class="el-icon-s-unfold" v-else title="展开侧边栏" />
+          </div>
+          <!-- 设置、文档、用户设置等 -->
+          <div class="header-menu">
+            <el-menu mode="horizontal" class="header-menu-submenu">
+              <!-- 用户设置 -->
+              <el-submenu title="用户设置" index="6">
+                <template slot="title">
+                  <span class="header-span">
+                    <img src="../assets/logo.png" :alt="userName" />
+                    {{ userName }}
+                  </span>
+                </template>
+                <el-menu-item index="6-1" @click="showPasswordBox">
+                  <i class="el-icon-edit"></i>修改密码
+                </el-menu-item>
+                <el-menu-item index="6-2" @click="logout">
+                  <i class="el-icon-close"></i>退出
+                </el-menu-item>
+              </el-submenu>
+            </el-menu>
+          </div>
+        </div>
+      </el-header>
+      <!-- 内容 -->
+      <el-main class="wrapper">
         <!--加 key 让组件被重用时 重新执行生命周期 否则在编辑文章页面路由到写文章页面时 数据被重用-->
         <router-view :key="$route.fullPath" />
       </el-main>
+      <!-- 底部 -->
+      <el-footer>
+        <div class="my_footer">
+          Copyright © {{ startYear }}-{{ endYear }} GoldSunny 版权所有
+        </div>
+      </el-footer>
     </el-container>
   </el-container>
 </template>
 
 <script>
 export default {
-  name: "Admin",
+  name: "Home",
   data() {
     return {
+      foldAside: true,
+      // 保存当前选中的菜单
+      menuActiveName: "home",
+      // 用于拼接当前图标的 class 样式
+      iconSize: "true",
+      //是否折叠
+      isCollapse: false,
+      //默认打开的菜单
+      defaultOpeneds: ["1", "2", "3", "4", "5"],
+      user: {},
       menuList: [
         {
           id: 1,
@@ -123,11 +165,11 @@ export default {
               title: "分类管理",
               path: "/type",
             },
-            // {
-            //   id: 16,
-            //   title: '标签管理',
-            //   path: '/tags'
-            // },
+            {
+              id: 16,
+              title: "标签管理",
+              path: "/tags",
+            },
             {
               id: 17,
               title: "评论管理",
@@ -231,7 +273,7 @@ export default {
         13: "el-icon-s-order",
         14: "el-icon-chat-dot-round",
         15: "el-icon-s-opportunity",
-        16: "submenu ali-iconfont icon-biaoqian",
+        16: "el-icon-paperclip",
         17: "el-icon-s-comment",
         21: "submenu ali-iconfont icon-bianjizhandian",
         22: "el-icon-share",
@@ -246,12 +288,20 @@ export default {
         51: "el-icon-s-marketing",
         52: "el-icon-view",
       },
-      //是否折叠
-      isCollapse: false,
-      //默认打开的菜单
-      defaultOpeneds: ["1", "2", "4", "5"],
-      user: {},
+      startYear: new Date().getFullYear(),
+      endYear: new Date().getFullYear() + 1,
+      userName: "zzx",
+      breadList: [], // 路由集合
     };
+  },
+  created() {
+    this.getUserInfo();
+    this.getBreadcrumb();
+  },
+  watch: {
+    $route() {
+      this.getBreadcrumb();
+    },
   },
   methods: {
     //获取缓存的用户名和头像
@@ -263,6 +313,32 @@ export default {
         this.$router.push("/login");
       }
     },
+    isHome(route) {
+      return route.name === "home";
+    },
+    getBreadcrumb() {
+      let matched = this.$route.matched;
+      //如果不是首页
+      if (!this.isHome(matched[0])) {
+        matched = [
+          {
+            path: "/home",
+            meta: {
+              title: "首页",
+            },
+          },
+        ].concat(matched);
+      }
+      this.breadList = matched;
+    },
+    // 展开密码修改框
+    showPasswordBox() {
+      this.UpdatePasswordVisible = true;
+      // this.$nextTick 表示数据渲染后，执行密码框初始化
+      this.$nextTick(() => {
+        this.$refs.updatePassowrd.init();
+      });
+    },
     //登出
     logout() {
       const _this = this;
@@ -271,100 +347,133 @@ export default {
         _this.$router.push("/login");
       });
     },
-  },
-  created() {
-    this.getUserInfo();
+    foldOrOpen(data) {
+      this.isCollapse = !this.isCollapse;
+    },
   },
 };
 </script>
+<style>
+.container {
+  height: 100%;
+}
 
-<style scoped>
-.el-header {
-  background-color: #399bdd;
-  display: flex;
-  justify-content: space-between;
-  padding-left: 10px;
-  align-items: center;
-  color: #ffffff;
-  font-size: 22px;
-  user-select: none;
+.wrapper {
+  height: calc(100vh - 100px);
 }
-.el-header div {
-  display: flex;
-  align-items: center;
+
+.wrapper_con {
+  padding-bottom: 0;
 }
-.el-header .title span {
-  margin-left: 15px;
-}
-.el-aside {
-  background-color: honeydew;
-  position: absolute;
-  top: 60px;
-  bottom: 0;
-  user-select: none;
-}
-.el-main {
-  background-color: white;
-  position: absolute;
-  top: 60px;
-  bottom: 0;
+
+.aside {
+  margin-bottom: 0;
+  height: 100%;
+  max-height: calc(100% - 50px);
+  width: 100%;
+  max-width: 200px;
+  background-color: #263238;
+  text-align: left;
   right: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
-.el-aside .el-menu {
-  border-right: none;
-}
-.m-el-main-width-190 {
-  width: calc(100% - 190px);
-}
-.el-dropdown-menu {
-  margin: 7px 0 0 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-}
-.m-el-main-width-64 {
-  width: calc(100% - 64px);
-}
-.admin-container {
-  height: 100%;
-}
-.toggle-button {
-  background-color: honeydew;
-  font-size: 20px;
-  line-height: 40px;
-  color: black;
+
+.header-logo {
+  background-color: #17b3a3;
   text-align: center;
+  height: 50px;
+  line-height: 50px;
+  width: 200px;
+  font-size: 24px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 0;
   cursor: pointer;
 }
-.el-dropdown-link {
-  outline-style: none !important;
-  outline-color: unset !important;
-  height: 100%;
+
+.el-submenu .el-menu-item {
+  max-width: 200px !important;
+}
+
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+
+.icon-size-false i {
+  font-size: 30px !important;
+}
+
+.icon-size-true i {
+  font-size: 18px !important;
+}
+
+.my_footer {
+  background: #eee;
+  color: #666;
+  font-size: 14px;
+  line-height: 36px;
+}
+
+.header {
+  padding: 0 10px;
+  display: flex;
+  height: 50px;
+  line-height: 50px;
+  border-bottom: solid 1px #e6e6e6;
+}
+
+.header-title {
+  height: 50px;
+  width: 50px;
+  float: left;
+  font-size: 30px;
   cursor: pointer;
 }
-.el-main::-webkit-scrollbar-track-piece {
-  background-color: transparent;
+
+.header-menu {
+  height: 50px;
+  width: 100%;
+  flex: 1;
+  line-height: 50px;
+  font-size: 30px;
 }
-.el-main::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px transparent;
-  box-shadow: inset 0 0 6px transparent;
-  background-color: transparent;
+
+.header-menu-submenu {
+  float: right;
 }
-.el-main::-webkit-scrollbar-thumb {
-  -webkit-box-shadow: inset 0 0 6px #48dbfb;
-  box-shadow: inset 0 0 6px #48dbfb;
-  background-color: #48dbfb;
+
+.header-submenu-a {
+  text-decoration: none;
+  color: #4cc4b8;
+  font-weight: bold;
+  font-size: 14px;
 }
-.el-aside {
-  -ms-overflow-style: none; /* IE10 */
-  scrollbar-width: none; /* Firefox */
+
+.header-submenu-a:hover {
+  background-color: #2c3e50;
 }
-.el-aside::-webkit-scrollbar {
-  display: none;
+
+.el-menu--horizontal > .el-menu-item,
+.el-menu--horizontal > .el-submenu .el-submenu__title {
+  height: 50px !important;
+  line-height: 50px !important;
+  padding: 0 10px !important;
 }
-.el-main::-webkit-scrollbar {
-  width: 8px;
-  height: 5px;
+
+.el-menu--collapse .el-menu .el-submenu,
+.el-menu--popup {
+  min-width: auto !important;
+}
+
+.header-span img {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  margin: 5px 5px 10px 10px;
+  border-radius: 50%;
+}
+
+.header-span {
+  font-size: 20px;
+  border-radius: 50%;
 }
 </style>

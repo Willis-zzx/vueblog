@@ -3,6 +3,7 @@ package com.zzx.common.lang;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
 
 /**
  * @author zhouzixin

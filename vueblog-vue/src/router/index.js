@@ -13,6 +13,7 @@ import BlogList from "../admin/BlogList.vue"
 import CategoryList from "../admin/CategoryList.vue"
 import CommentList from "../admin/CommentList";
 import FriendList from "../admin/FriendList";
+import Tag from "../admin/Tag.vue"
 
 Vue.use(VueRouter)
 
@@ -65,6 +66,14 @@ const routes = [{
                 meta: {
                     requireAuth: true,
                     title: '分类管理'
+                }
+            },
+            {
+                path: '/tags',
+                component: Tag,
+                meta: {
+                    requireAuth: true,
+                    title: '标签管理'
                 }
             },
             {

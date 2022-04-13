@@ -1,6 +1,5 @@
 package com.zzx.controller;
 
-import com.github.pagehelper.IPage;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zzx.common.lang.Result;
@@ -8,15 +7,11 @@ import com.zzx.config.RedisKeyConfig;
 import com.zzx.entity.Friend;
 import com.zzx.service.FriendService;
 import com.zzx.service.RedisService;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,10 +22,15 @@ import java.util.List;
 @RestController
 public class FriendController {
 
-    @Autowired
+
     private FriendService friendService;
-    @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private void setService(FriendService friendService, RedisService redisService) {
+        this.friendService = friendService;
+        this.redisService = redisService;
+    }
 
     /**
      * 查询所有公开的友链
@@ -61,7 +61,7 @@ public class FriendController {
      * 友链浏览次数加一
      */
     @RequestMapping("/friend/onclick")
-    public Result addView(@RequestParam(name = "") String nickname) {
+    public Result addView(@RequestParam(name = "nickname") String nickname) {
         if ("".equals(nickname)) {
             return Result.error("访问出错");
         }
